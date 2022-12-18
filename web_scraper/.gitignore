@@ -1,0 +1,5 @@
+
+.env
+files
+geckodriver.log
+local_db.db
