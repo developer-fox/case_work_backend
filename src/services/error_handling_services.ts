@@ -1,6 +1,4 @@
 import { errorTypes } from "../models/error_types";
-
-
 interface ICustomApiError{
   error_value: string,
   error_type: errorTypes,
@@ -11,15 +9,15 @@ class CustomApiError implements ICustomApiError{
   error_value: string;
   error_type: errorTypes;
   status_code: number;
-
+  
   constructor(error_value: string, error_type: errorTypes){
     this.error_type = error_type;
     this.error_value = error_value;
     this.status_code = statusCodeLoader(error_type);
   };
-
 }
 
+/// Thanks to this method, errors are generated with error type and description.
 const error_handling_services =  function ({error_type, value}: {error_type: errorTypes, value?: string}): CustomApiError{
   let errorMessage  = {
     [errorTypes.invalidValue]: `invalid value: ${value}`,
@@ -33,8 +31,7 @@ const error_handling_services =  function ({error_type, value}: {error_type: err
   return new CustomApiError(value ?? error_type.toString(),error_type);
 }
 
-
-
+/// Returns the relevant status code information according to the error type.
 function statusCodeLoader(errorType: errorTypes): number{
   switch (errorType) {
     case errorTypes.authorizationError:
@@ -56,7 +53,4 @@ function statusCodeLoader(errorType: errorTypes): number{
   }
 }
 
-export {
-  CustomApiError,
-  error_handling_services
-}
+export { CustomApiError, error_handling_services}

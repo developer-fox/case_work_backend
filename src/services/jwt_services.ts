@@ -73,5 +73,4 @@ export default class JwtServices{
     const refreshToken = jwt.sign({id: id}, process.env.jwt_refresh_secret as string, {expiresIn: "1 day"});
     return {jwt_token: token, refresh_token: refreshToken};
   }
-
 }

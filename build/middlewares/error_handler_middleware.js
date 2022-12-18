@@ -5,6 +5,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 const joi_1 = __importDefault(require("joi"));
 const error_handling_services_1 = require("../services/error_handling_services");
+/// Errors that occur in all middleware are forwarded to this middleware. here the errors are parsed and error information is sent to the client side.
 function default_1(err, req, res, next) {
     if (err instanceof joi_1.default.ValidationError) {
         return res.status(422).send(err.details);

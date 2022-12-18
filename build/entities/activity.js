@@ -6,6 +6,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.activityJoiSchema = exports.activitySchema = exports.activityModel = void 0;
 const mongoose_1 = __importDefault(require("mongoose"));
 const joi_1 = __importDefault(require("joi"));
+// joi schema
 const activityJoiSchema = joi_1.default.object({
     title: joi_1.default.string().required(),
     date: joi_1.default.date().required(),

@@ -6,6 +6,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const environment_1 = __importDefault(require("../config/environment"));
 const error_types_1 = require("../models/error_types");
 const error_handling_services_1 = require("../services/error_handling_services");
+/// This middleware checks if there is an admin key in the header and if it is correct. If it exists and is true, it will let the request pass.
 function adminAuthorizationCheck(req, res, next) {
     try {
         if (req.headers["admin-key"] != environment_1.default.admin_password)

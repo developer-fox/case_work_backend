@@ -11,6 +11,7 @@ class CustomApiError {
     ;
 }
 exports.CustomApiError = CustomApiError;
+/// Thanks to this method, errors are generated with error type and description.
 const error_handling_services = function ({ error_type, value }) {
     let errorMessage = {
         [error_types_1.errorTypes.invalidValue]: `invalid value: ${value}`,
@@ -24,6 +25,7 @@ const error_handling_services = function ({ error_type, value }) {
     return new CustomApiError(value !== null && value !== void 0 ? value : error_type.toString(), error_type);
 };
 exports.error_handling_services = error_handling_services;
+/// Returns the relevant status code information according to the error type.
 function statusCodeLoader(errorType) {
     switch (errorType) {
         case error_types_1.errorTypes.authorizationError:

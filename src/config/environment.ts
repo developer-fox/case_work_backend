@@ -1,7 +1,9 @@
 import dotenv from 'dotenv';
 
+// load the environment variables
 dotenv.config();
 
+// interface for environment variables object
 type IEnvironment = {
   mongodb_url: string,
   jwt_secret: string,
@@ -9,7 +11,8 @@ type IEnvironment = {
   collect_api_token: string,
   admin_password: string,
   aws_access_key_id: string,
-  aws_secret_access_key: string
+  aws_secret_access_key: string,
+  bucket_name: string
 }
 
 const environment: IEnvironment = {
@@ -20,6 +23,7 @@ const environment: IEnvironment = {
   admin_password: process.env.admin_psw as string,
   aws_access_key_id:  process.env.AWS_ACCESS_KEY_ID as string,
   aws_secret_access_key: process.env.AWS_SECRET_ACCESS_KEY as string,
+  bucket_name: process.env.bucket_name as string
 }
 
 export default environment;

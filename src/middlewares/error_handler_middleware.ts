@@ -1,8 +1,9 @@
 
 import Express from "express";
 import joi from "joi";
-import { error_handling_services, CustomApiError} from "../services/error_handling_services";
+import {CustomApiError} from "../services/error_handling_services";
 
+/// Errors that occur in all middleware are forwarded to this middleware. here the errors are parsed and error information is sent to the client side.
 export default function(err : any, req: Express.Request, res: Express.Response, next: Express.NextFunction){
   if(err instanceof joi.ValidationError){
     return res.status(422).send(err.details);

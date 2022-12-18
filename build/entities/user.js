@@ -6,11 +6,13 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.userJoiSchema = exports.userSchema = exports.userModel = void 0;
 const mongoose_1 = __importDefault(require("mongoose"));
 const joi_1 = __importDefault(require("joi"));
+// user joi schema
 const userJoiSchema = joi_1.default.object({
     email: joi_1.default.string().email().required(),
     password: joi_1.default.string().min(8).required(),
 });
 exports.userJoiSchema = userJoiSchema;
+// user schema
 const userSchema = new mongoose_1.default.Schema({
     email: { type: String, required: true },
     password: { type: String, required: true },

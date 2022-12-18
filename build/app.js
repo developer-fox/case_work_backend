@@ -1,13 +1,4 @@
 "use strict";
-var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
-    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
-    return new (P || (P = Promise))(function (resolve, reject) {
-        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
-        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
-        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
-        step((generator = generator.apply(thisArg, _arguments || [])).next());
-    });
-};
 var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
@@ -21,36 +12,34 @@ const auth_routes_1 = __importDefault(require("./routes/auth_routes"));
 const activity_routes_1 = __importDefault(require("./routes/activity_routes"));
 const admin_routes_1 = __importDefault(require("./routes/admin_routes"));
 const jwt_services_1 = __importDefault(require("./services/jwt_services"));
-const axios_1 = __importDefault(require("axios"));
-const error_handling_services_1 = require("./services/error_handling_services");
-const error_types_1 = require("./models/error_types");
-const request_service_1 = require("./services/request_service");
 const admin_authorization_check_middleware_1 = __importDefault(require("./middlewares/admin_authorization_check_middleware"));
+const rate_limit_service_1 = require("./services/rate_limit_service");
+const helmet_1 = __importDefault(require("helmet"));
 mongoose_1.default.set("strictQuery", true);
+// creating an express app
 const app = (0, express_1.default)();
+//
+// creating a http server
+// If we wish, we can start listening to our express application directly. but if we want to add websocket service to our backend service, we have to change it. so it is more advantageous to do it this way.
 const server = http_1.default.createServer(app);
+//
+// this middleware only parses urlencoded bodies and only looks at requests
 app.use(express_1.default.urlencoded());
+// this middleware parses the body of the incoming request.
 app.use(express_1.default.json());
-const instance = axios_1.default.create({
-    headers: { "authorization": environment_1.default.collect_api_token, 'content-type': 'application/json', "Accept-Encoding": "gzip,deflate,compress" },
-    baseURL: "https://api.collectapi.com/weather/getWeather?data.lang=tr",
-});
-app.use("/test", (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
-    try {
-        const fetchResult = yield request_service_1.RequestService.instance.getWeatherOfWeekRequest("ankara");
-        if (fetchResult.success != undefined && !fetchResult.success) {
-            return next((0, error_handling_services_1.error_handling_services)({ error_type: error_types_1.errorTypes.invalidValue, value: "city" }));
-        }
-        return res.send(fetchResult);
-    }
-    catch (error) {
-        return next(error);
-    }
-}));
+//
+// This middleware brings some basic security measures to our service using the helmet package.
+// for details: https://www.npmjs.com/package/helmet
+app.use((0, helmet_1.default)());
+//
+// request limiter middleware
+app.use(rate_limit_service_1.RateLimitService.limiter);
+// routes
 app.use("/auth", auth_routes_1.default);
 app.use("/activity", jwt_services_1.default.instance.validateJwt, activity_routes_1.default);
 app.use("/admin", admin_authorization_check_middleware_1.default, admin_routes_1.default);
 app.use(error_handler_middleware_1.default);
+// mongodb database connection
 mongoose_1.default.connect(environment_1.default.mongodb_url).then((connection) => {
     server.listen(8080);
 })

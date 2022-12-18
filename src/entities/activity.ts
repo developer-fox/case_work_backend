@@ -2,6 +2,7 @@
 import mongoose from 'mongoose';
 import joi from 'joi';
 
+// interface for activity schema
 interface IActivity{
   title: String,
   date: Date,
@@ -11,6 +12,8 @@ interface IActivity{
   venue: String
 }
 
+// interface for activity joi schema
+// joi is a useful library of data validation
 interface IActivityJoiSchema{
   title: string,
   date: Date,
@@ -20,6 +23,7 @@ interface IActivityJoiSchema{
   category: string,
 }
 
+// joi schema
 const activityJoiSchema = joi.object<IActivityJoiSchema>({
   title: joi.string().required(),
   date: joi.date().required(),
